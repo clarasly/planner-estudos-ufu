@@ -4,374 +4,419 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Slytherin Study • UFU Edition</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PL2FS4YGJK"></script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4KCK47Y29X"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
-    gtag('config', 'G-PL2FS4YGJK');
+    gtag('config', 'G-4KCK47Y29X');
   </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="app-layout">
-    <!-- SIDEBAR FIXA -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-brand">
-        <div class="crest">🐍</div>
-        <div>
-          <h2>SLYTHERIN STUDY</h2>
-          <span>UFU Edition • Medicina</span>
-        </div>
+  <!-- BARRA LATERAL -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="crest">🐍</div>
+      <div>
+        <h1>SLYTHERIN<br>STUDY</h1>
+        <span>UFU Edition • Medicina</span>
       </div>
-
-      <nav class="nav-menu">
-        <button class="nav-item active" onclick="navigate('dashboard', this)">
-          <span>🏛️</span> Dashboard
-        </button>
-        <button class="nav-item" onclick="navigate('planner', this)">
-          <span>📅</span> Planejamento
-        </button>
-        <button class="nav-item" onclick="navigate('syllabus', this)">
-          <span>🗺️</span> Mapa do Edital
-        </button>
-        <button class="nav-item" onclick="navigate('revisions', this)">
-          <span>🔁</span> Revisões <em id="navRevBadge" class="badge-pill">0</em>
-        </button>
-        <button class="nav-item" onclick="navigate('mistakes', this)">
-          <span>🎯</span> Caderno de Erros
-        </button>
-        <button class="nav-item" onclick="navigate('simulations', this)">
-          <span>📈</span> Simulados & Stats
-        </button>
-        <button class="nav-item" onclick="navigate('essays', this)">
-          <span>✍️</span> Redações
-        </button>
-        <button class="nav-item" onclick="navigate('rewards', this)">
-          <span>👑</span> Recompensas
-        </button>
-      </nav>
-
-      <div class="sidebar-footer">
-        <div class="mini-rank">
-          <small id="rankLabel">Nível 1 • Estrategista</small>
-          <div class="xp-track"><div class="xp-fill" id="xpFill"></div></div>
-          <span id="xpCounter">0 / 300 XP</span>
-        </div>
-      </div>
-    </aside>
-
-    <!-- ÁREA PRINCIPAL -->
-    <div class="main-wrapper">
-      <!-- HEADER SUPERIOR -->
-      <header class="topbar">
-        <div class="topbar-left">
-          <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
-          <div>
-            <h1 id="pageTitle">Central de Comando</h1>
-            <p id="greetingSub" class="muted">Rumo à Medicina UFU • 04 de Abril de 2027</p>
-          </div>
-        </div>
-
-        <div class="topbar-hud">
-          <div class="hud-chip">
-            <span class="chip-label">Vestibular UFU</span>
-            <strong id="daysLeft">-- dias</strong>
-            <small id="examWeekAlert" class="danger-tag hidden">SEMANA DA PROVA</small>
-          </div>
-          <div class="hud-chip gold-border">
-            <span class="chip-label">Saldo de Pontos</span>
-            <strong id="pointsDisplay" class="gold-text">0 pts</strong>
-          </div>
-        </div>
-      </header>
-
-      <!-- CONTEÚDO DAS PÁGINAS -->
-      <main class="content-area">
-
-        <!-- 1. DASHBOARD -->
-        <section id="view-dashboard" class="view active">
-          <div class="toolbar">
-            <span class="tag-emerald">Visão Geral da Preparação</span>
-            <button class="ghost-btn" onclick="toggleWidgetConfig()">⚙️ Personalizar Cards</button>
-          </div>
-
-          <div id="widgetConfigPanel" class="card mb-20 hidden">
-            <h3>Escolha os indicadores visíveis no seu Dashboard:</h3>
-            <div class="checkbox-row">
-              <label><input type="checkbox" checked onchange="toggleWidget('w-priority', this.checked)"> Prioridade Recomendada</label>
-              <label><input type="checkbox" checked onchange="toggleWidget('w-quick', this.checked)"> Registro Rápido de Pontos</label>
-              <label><input type="checkbox" checked onchange="toggleWidget('w-today', this.checked)"> Agenda de Hoje</label>
-              <label><input type="checkbox" checked onchange="toggleWidget('w-revs', this.checked)"> Radar de Revisões</label>
-              <label><input type="checkbox" checked onchange="toggleWidget('w-mock', this.checked)"> Último Simulado</label>
-            </div>
-          </div>
-
-          <!-- KPIs Superiores -->
-          <div class="kpi-grid">
-            <div class="card kpi-card" id="w-priority">
-              <span class="kpi-title">🎯 Prioridade Recomendada</span>
-              <strong id="smartPriorityText" class="kpi-value">Cadastrar cronograma da semana</strong>
-              <small class="muted" id="smartPrioritySub">Baseado em revisões vencidas e pendências</small>
-            </div>
-            <div class="card kpi-card">
-              <span class="kpi-title">📚 Progresso do Edital</span>
-              <strong id="syllabusProgressKPI" class="kpi-value">0%</strong>
-              <small class="muted" id="syllabusCountKPI">0 assuntos dominados</small>
-            </div>
-            <div class="card kpi-card" id="w-mock">
-              <span class="kpi-title">🏆 Último Simulado UFU</span>
-              <strong id="lastMockKPI" class="kpi-value">-- / 65</strong>
-              <small class="muted" id="lastMockPctKPI">Nenhum simulado lançado</small>
-            </div>
-          </div>
-
-          <div class="grid-2 mt-20">
-            <!-- Ações Rápidas -->
-            <div class="card" id="w-quick">
-              <div class="card-head">
-                <h3>⚡ Registrar Execução (+ Pontos)</h3>
-              </div>
-              <div class="quick-grid">
-                <button class="tile-btn" onclick="addPoints(15, 'Anki concluído')"><span>🧠 Anki</span><b>+15</b></button>
-                <button class="tile-btn" onclick="addPoints(20, 'Aula assistida')"><span>🎧 Aula</span><b>+20</b></button>
-                <button class="tile-btn" onclick="addPoints(30, 'Lista concluída')"><span>📝 Lista</span><b>+30</b></button>
-                <button class="tile-btn" onclick="addPoints(40, 'Assunto finalizado')"><span>📚 Assunto</span><b>+40</b></button>
-                <button class="tile-btn gold" onclick="addPoints(60, '+7h líquidas estudadas')"><span>🔥 +7h Líquidas</span><b>+60</b></button>
-                <button class="tile-btn gold" onclick="addPoints(80, 'Simulado concluído')"><span>🏆 Simulado</span><b>+80</b></button>
-              </div>
-            </div>
-
-            <!-- Radar de Revisões -->
-            <div class="card" id="w-revs">
-              <div class="card-head">
-                <h3>⏳ Próximas Revisões (15 • 30 • 60d)</h3>
-                <button class="ghost-btn" onclick="navigate('revisions')">Abrir ciclo →</button>
-              </div>
-              <div id="dashRevisionList" class="stack-list"></div>
-            </div>
-          </div>
-
-          <!-- Tarefas de Hoje -->
-          <div class="card mt-20" id="w-today">
-            <div class="card-head">
-              <h3>📋 Agenda de Hoje (<span id="todayDayName"></span>)</h3>
-              <button class="ghost-btn" onclick="navigate('planner')">Planejamento completo →</button>
-            </div>
-            <div id="dashTodayTasks" class="stack-list"></div>
-          </div>
-        </section>
-
-        <!-- 2. PLANEJAMENTO ADAPTATIVO -->
-        <section id="view-planner" class="view">
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3>📅 Planejamento Semanal & Diário Adaptável</h3>
-                <p class="muted">Não conseguiu cumprir hoje? Clique em <b>Reagendar</b> para mover sem bagunçar o resto da semana.</p>
-              </div>
-              <button class="ghost-btn" onclick="resetWeekChecks()">🔄 Novo Ciclo Semanal</button>
-            </div>
-
-            <form id="plannerForm" class="form-row">
-              <select id="planDay">
-                <option value="Segunda">Segunda</option>
-                <option value="Terça">Terça</option>
-                <option value="Quarta">Quarta</option>
-                <option value="Quinta">Quinta</option>
-                <option value="Sexta">Sexta</option>
-                <option value="Sábado">Sábado</option>
-                <option value="Domingo">Domingo</option>
-              </select>
-              <input type="time" id="planTime" value="08:00" />
-              <select id="planType">
-                <option value="Teoria">Teoria</option>
-                <option value="Questões">Questões</option>
-                <option value="Discursiva">Questões Discursivas</option>
-                <option value="Revisão">Revisão</option>
-                <option value="Redação">Redação</option>
-                <option value="Simulado">Simulado</option>
-                <option value="Obras UFU">Leitura de Obras</option>
-              </select>
-              <input type="text" id="planSubject" placeholder="Ex: Física — Cinemática Vetorial" required />
-              <button type="submit" class="primary-btn">+ Agendar</button>
-            </form>
-
-            <div id="plannerGrid" class="week-grid"></div>
-          </div>
-        </section>
-
-        <!-- 3. MAPA DO EDITAL -->
-        <section id="view-syllabus" class="view">
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3>🗺️ Mapa do Edital • Vestibular → Área → Disciplina → Assunto</h3>
-                <p class="muted">Acompanhe domínio, questões resolvidas e taxa de acerto por tópico.</p>
-              </div>
-            </div>
-
-            <form id="syllabusForm" class="form-row">
-              <select id="sylArea">
-                <option value="Ciências da Natureza">Ciências da Natureza</option>
-                <option value="Matemática">Matemática</option>
-                <option value="Linguagens & Obras">Linguagens & Obras</option>
-                <option value="Ciências Humanas">Ciências Humanas</option>
-              </select>
-              <input type="text" id="sylDiscipline" placeholder="Disciplina (ex: Biologia)" required />
-              <input type="text" id="sylTopic" placeholder="Assunto (ex: Citologia)" required />
-              <input type="number" id="sylQuestions" placeholder="Questões feitas" min="0" value="0" />
-              <input type="number" id="sylCorrect" placeholder="Acertos" min="0" value="0" />
-              <select id="sylStatus">
-                <option value="Em estudo">Em estudo</option>
-                <option value="Revisar">Precisa revisar</option>
-                <option value="Dominado">Dominado (+40 pts)</option>
-              </select>
-              <button type="submit" class="primary-btn">+ Adicionar Assunto</button>
-            </form>
-
-            <div id="syllabusList" class="stack-list"></div>
-          </div>
-        </section>
-
-        <!-- 4. REVISÕES 15 / 30 / 60 -->
-        <section id="view-revisions" class="view">
-          <div class="card">
-            <div class="card-head">
-              <h3>🔁 Sistema de Retenção Espaçada (15 • 30 • 60 Dias)</h3>
-              <span class="tag-emerald">+15 pts por revisão concluída</span>
-            </div>
-            <form id="revisionForm" class="form-row">
-              <input type="text" id="revTopic" placeholder="Ex: Lista de Química Básica — Ligações Químicas" required />
-              <input type="date" id="revDate" required />
-              <button type="submit" class="primary-btn">Gerar Datas</button>
-            </form>
-            <div id="revisionList" class="stack-list"></div>
-          </div>
-        </section>
-
-        <!-- 5. CADERNO DE ERROS -->
-        <section id="view-mistakes" class="view">
-          <div class="card">
-            <div class="card-head">
-              <div>
-                <h3>🎯 Caderno de Erros & Diagnóstico</h3>
-                <p class="muted">Transforme cada erro de simulado ou lista em ponto garantido na prova.</p>
-              </div>
-            </div>
-
-            <form id="mistakeForm" class="form-col">
-              <div class="form-row">
-                <input type="text" id="errDiscipline" placeholder="Disciplina (ex: Química)" required />
-                <input type="text" id="errTopic" placeholder="Assunto (ex: Eletroquímica)" required />
-                <select id="errType">
-                  <option value="Falta de base teórica">🔴 Falta de base teórica</option>
-                  <option value="Dúvida na resolução">🔵 Dúvida na resolução</option>
-                  <option value="Falta de atenção / Interpretação">🩷 Falta de atenção / Interpretação</option>
-                </select>
-              </div>
-              <input type="text" id="errQuestion" placeholder="Identificação ou resumo da questão" required />
-              <textarea id="errCorrection" rows="2" placeholder="Como resolver corretamente / O que não repetir..." required></textarea>
-              <button type="submit" class="primary-btn">Registrar no Caderno (+15 pts)</button>
-            </form>
-
-            <div id="mistakeList" class="stack-list mt-20"></div>
-          </div>
-        </section>
-
-        <!-- 6. SIMULADOS & DESEMPENHO -->
-        <section id="view-simulations" class="view">
-          <div class="card">
-            <div class="card-head">
-              <h3>📈 Evolução nos Simulados UFU</h3>
-              <span class="tag-gold" id="bestMockTag">Recorde: --/65</span>
-            </div>
-
-            <form id="mockForm" class="form-row">
-              <input type="text" id="mockName" placeholder="Ex: Simulado UFU #01" required />
-              <input type="number" id="mockScore" placeholder="Acertos (ex: 36)" min="0" required />
-              <input type="number" id="mockTotal" value="65" placeholder="Total (ex: 65)" min="1" required />
-              <button type="submit" class="primary-btn">Lançar Resultado (+80 pts)</button>
-            </form>
-
-            <div class="chart-box">
-              <canvas id="mockChart"></canvas>
-            </div>
-            <div id="mockHistory" class="chip-wrap mt-20"></div>
-          </div>
-        </section>
-
-        <!-- 7. REDAÇÕES -->
-        <section id="view-essays" class="view">
-          <div class="card">
-            <div class="card-head">
-              <h3>✍️ Controle de Redações</h3>
-              <span class="tag-emerald">+30 pts por redação entregue</span>
-            </div>
-            <form id="essayForm" class="form-row">
-              <input type="text" id="essayTheme" placeholder="Tema da redação" required />
-              <input type="date" id="essayDate" required />
-              <input type="number" id="essayGrade" placeholder="Nota" step="0.1" min="0" required />
-              <input type="text" id="essayNotes" placeholder="Ponto principal a melhorar" />
-              <button type="submit" class="primary-btn">Salvar Redação</button>
-            </form>
-            <div id="essayList" class="stack-list"></div>
-          </div>
-        </section>
-
-        <!-- 8. RECOMPENSAS & CONQUISTAS -->
-        <section id="view-rewards" class="view">
-          <div class="card">
-            <div class="card-head">
-              <h3>👑 Loja de Recompensas Estratégicas</h3>
-              <span class="tag-gold">Use seus pontos com mérito</span>
-            </div>
-            <div class="reward-grid">
-              <div class="reward-card">
-                <div>
-                  <h4>🎬 Capítulo de Série</h4>
-                  <p class="muted">Pausa programada após bater as metas do dia</p>
-                </div>
-                <button class="redeem-btn" onclick="redeemReward(90, 'Capítulo de Série')">Resgatar • 90 pts</button>
-              </div>
-              <div class="reward-card">
-                <div>
-                  <h4>🎮 Sessão de Jogo</h4>
-                  <p class="muted">Tempo livre para relaxar a mente</p>
-                </div>
-                <button class="redeem-btn" onclick="redeemReward(120, 'Sessão de Jogo')">Resgatar • 120 pts</button>
-              </div>
-              <div class="reward-card">
-                <div>
-                  <h4>⚽ Assistir Jogo de Futebol</h4>
-                  <p class="muted">90 minutos torcendo sem culpa</p>
-                </div>
-                <button class="redeem-btn" onclick="redeemReward(150, 'Jogo de Futebol')">Resgatar • 150 pts</button>
-              </div>
-              <div class="reward-card">
-                <div>
-                  <h4>🛌 Um Dia Inteiro de Folga</h4>
-                  <p class="muted">Descanso total para voltar em alta performance</p>
-                </div>
-                <button class="redeem-btn" onclick="redeemReward(450, 'Dia Inteiro de Folga')">Resgatar • 450 pts</button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </main>
     </div>
-  </div>
 
-  <div id="toast" class="toast"></div>
+    <nav class="nav-menu">
+      <button class="nav-item active" onclick="navigate('dashboard', this)">🏛️ Dashboard</button>
+      <button class="nav-item" onclick="navigate('planner', this)">📅 Planejamento</button>
+      <button class="nav-item" onclick="navigate('syllabus', this)">📘 Mapa do Edital</button>
+      <button class="nav-item" onclick="navigate('revisions', this)">📒 Revisões <span class="badge" id="navRevBadge">0</span></button>
+      <button class="nav-item" onclick="navigate('mistakes', this)">🎯 Caderno de Erros</button>
+      <button class="nav-item" onclick="navigate('simulations', this)">📈 Simulados & Stats</button>
+      <button class="nav-item" onclick="navigate('essays', this)">✍️ Redações</button>
+      <button class="nav-item" onclick="navigate('rewards', this)">👑 Recompensas</button>
+      <button class="nav-item" onclick="navigate('ranking', this)">🏆 Ranking & Perfil</button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="xp-footer">
+        <div class="xp-title" id="rankLabel">Nível 1 • Estrategista</div>
+        <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+        <div class="xp-sub" id="xpCounter">0 / 300 XP</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ÁREA PRINCIPAL -->
+  <main class="main-content">
+    <!-- TOPO -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <div>
+          <h2 id="pageTitle">Central de Comando</h2>
+          <p class="subtitle">Rumo à Medicina UFU • 04 de Abril de 2027</p>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="top-stat-box">
+          <small>VESTIBULAR UFU</small>
+          <strong id="daysLeft">-- dias</strong>
+          <span class="week-alert hidden" id="examWeekAlert">SEMANA DA PROVA</span>
+        </div>
+
+        <div class="top-stat-box">
+          <small>SALDO DE PONTOS</small>
+          <strong class="gold-val" id="pointsDisplay">0 pts</strong>
+        </div>
+
+        <button class="btn-outline" id="btnLoginGoogle" onclick="loginWithGoogle()">Entrar com Google</button>
+        <div id="userChip" class="user-chip hidden" onclick="navigate('ranking')">
+          <img id="topUserAvatar" src="" alt="Avatar" />
+          <span id="topUserName">Estudante</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- SUB-BARRA -->
+    <div class="subbar">
+      <span class="pill-tag" id="sectionPill">Visão Geral da Preparação</span>
+      <button class="btn-outline btn-xs" onclick="toggleWidgetConfig()">⚙️ Personalizar Cards</button>
+    </div>
+
+    <!-- PAINEL DE WIDGETS -->
+    <section class="widget-config hidden" id="widgetConfigPanel">
+      <span>Exibir no Dashboard:</span>
+      <label><input type="checkbox" checked onchange="toggleWidget('w-kpis', this.checked)" /> Indicadores</label>
+      <label><input type="checkbox" checked onchange="toggleWidget('w-exec', this.checked)" /> Registrar Execução</label>
+      <label><input type="checkbox" checked onchange="toggleWidget('w-revisions', this.checked)" /> Próximas Revisões</label>
+      <label><input type="checkbox" checked onchange="toggleWidget('w-today', this.checked)" /> Agenda de Hoje</label>
+    </section>
+
+    <!-- 1. DASHBOARD -->
+    <section class="view active" id="view-dashboard">
+      <div class="kpi-grid" id="w-kpis">
+        <div class="card kpi-card">
+          <span class="kpi-label">🎯 Prioridade Recomendada</span>
+          <strong class="kpi-title" id="smartPriorityText">Cadastrar cronograma da semana</strong>
+          <small class="muted" id="smartPrioritySub">Baseado em revisões vencidas e pendências</small>
+        </div>
+        <div class="card kpi-card">
+          <span class="kpi-label">📚 Progresso do Edital</span>
+          <strong class="kpi-num" id="syllabusProgressKPI">0%</strong>
+          <small class="muted" id="syllabusCountKPI">0 de 124 assuntos dominados</small>
+        </div>
+        <div class="card kpi-card">
+          <span class="kpi-label">🏆 Último Simulado UFU</span>
+          <strong class="kpi-num" id="lastMockKPI">-- / 65</strong>
+          <small class="muted" id="lastMockPctKPI">Nenhum simulado lançado</small>
+        </div>
+      </div>
+
+      <div class="dashboard-mid">
+        <div class="card" id="w-exec">
+          <div class="card-header">
+            <h3>⚡ Registrar Execução (+ Pontos)</h3>
+          </div>
+          <div class="exec-grid">
+            <button class="exec-btn" onclick="quickAction(15, 'Revisão Anki')">
+              <span>🧠 Anki</span>
+              <strong>+15</strong>
+            </button>
+            <button class="exec-btn" onclick="quickAction(20, 'Aula Concluída')">
+              <span>🎧 Aula</span>
+              <strong>+20</strong>
+            </button>
+            <button class="exec-btn" onclick="quickAction(30, 'Lista de Exercícios')">
+              <span>📄 Lista</span>
+              <strong>+30</strong>
+            </button>
+            <button class="exec-btn" onclick="quickAction(40, 'Assunto Finalizado')">
+              <span>📚 Assunto</span>
+              <strong>+40</strong>
+            </button>
+            <button class="exec-btn" onclick="quickAction(60, '+7h Líquidas de Estudo')">
+              <span>🔥 +7h Líquidas</span>
+              <strong>+60</strong>
+            </button>
+            <button class="exec-btn" onclick="quickAction(80, 'Simulado Concluído')">
+              <span>🏆 Simulado</span>
+              <strong>+80</strong>
+            </button>
+          </div>
+        </div>
+
+        <div class="card" id="w-revisions">
+          <div class="card-header">
+            <h3>⏳ Próximas Revisões (15 • 30 • 60d)</h3>
+            <button class="btn-outline btn-xs" onclick="navigate('revisions')">Abrir ciclo →</button>
+          </div>
+          <div id="dashRevisionList" class="list-stack"></div>
+        </div>
+      </div>
+
+      <div class="card mt-18" id="w-today">
+        <div class="card-header">
+          <h3>📋 Agenda de Hoje (<span id="todayDayName"></span>)</h3>
+          <button class="btn-outline btn-xs" onclick="navigate('planner')">Planejamento completo →</button>
+        </div>
+        <div id="dashTodayTasks" class="list-stack"></div>
+      </div>
+    </section>
+
+    <!-- 2. PLANEJAMENTO -->
+    <section class="view" id="view-planner">
+      <div class="card mb-18">
+        <div class="card-header">
+          <h3>Adicionar Bloco de Estudo</h3>
+          <button class="btn-outline btn-xs" onclick="resetWeekChecks()">Resetar Semana</button>
+        </div>
+        <form id="plannerForm" class="form-grid">
+          <select id="planDay">
+            <option value="Segunda">Segunda-feira</option>
+            <option value="Terça">Terça-feira</option>
+            <option value="Quarta">Quarta-feira</option>
+            <option value="Quinta">Quinta-feira</option>
+            <option value="Sexta">Sexta-feira</option>
+            <option value="Sábado">Sábado</option>
+            <option value="Domingo">Domingo</option>
+          </select>
+          <input type="time" id="planTime" value="14:00" required />
+          <select id="planType">
+            <option value="Teoria">Teoria</option>
+            <option value="Questões">Questões</option>
+            <option value="Revisão">Revisão</option>
+            <option value="Simulado">Simulado</option>
+            <option value="Obra Literária">Obra Literária</option>
+            <option value="Redação">Redação</option>
+          </select>
+          <input type="text" id="planSubject" placeholder="Ex: Física - Eletrodinâmica" required />
+          <button type="submit" class="btn-primary">+ Agendar</button>
+        </form>
+      </div>
+
+      <div class="week-grid" id="plannerGrid"></div>
+    </section>
+
+    <!-- 3. MAPA DO EDITAL -->
+    <section class="view" id="view-syllabus">
+      <div class="card mb-18">
+        <h3>Adicionar Tópico ao Edital</h3>
+        <form id="syllabusForm" class="form-grid">
+          <select id="sylArea">
+            <option value="Ciências da Natureza">Ciências da Natureza</option>
+            <option value="Matemática">Matemática</option>
+            <option value="Linguagens & Obras">Linguagens & Obras</option>
+            <option value="Ciências Humanas">Ciências Humanas</option>
+          </select>
+          <input type="text" id="sylDiscipline" placeholder="Matéria (Ex: Biologia)" required />
+          <input type="text" id="sylTopic" placeholder="Assunto (Ex: Fisiologia Renal)" required />
+          <input type="number" id="sylQuestions" placeholder="Questões feitas" min="0" value="0" />
+          <input type="number" id="sylCorrect" placeholder="Acertos" min="0" value="0" />
+          <select id="sylStatus">
+            <option value="Em estudo">Em estudo</option>
+            <option value="Revisar">Precisa revisar</option>
+            <option value="Dominado">Dominado</option>
+          </select>
+          <button type="submit" class="btn-primary">Salvar Assunto</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Conteúdos Programáticos UFU 2027</h3>
+        <div id="syllabusList" class="list-stack"></div>
+      </div>
+    </section>
+
+    <!-- 4. REVISÕES -->
+    <section class="view" id="view-revisions">
+      <div class="card mb-18">
+        <h3>Agendar Ciclo Automático (15 • 30 • 60 dias)</h3>
+        <form id="revisionForm" class="form-grid">
+          <input type="text" id="revTopic" placeholder="Assunto concluído hoje" required />
+          <input type="date" id="revDate" required />
+          <button type="submit" class="btn-primary">Gerar Datas de Revisão</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Cronograma de Revisões Espaçadas</h3>
+        <div id="revisionList" class="list-stack"></div>
+      </div>
+    </section>
+
+    <!-- 5. CADERNO DE ERROS -->
+    <section class="view" id="view-mistakes">
+      <div class="card mb-18">
+        <h3>Registrar Questão Errada</h3>
+        <form id="mistakeForm" class="form-grid">
+          <input type="text" id="errDiscipline" placeholder="Matéria" required />
+          <input type="text" id="errTopic" placeholder="Assunto específico" required />
+          <select id="errType">
+            <option value="Lacuna Teórica">Lacuna Teórica</option>
+            <option value="Falta de Atenção">Falta de Atenção</option>
+            <option value="Interpretação UFU">Interpretação UFU</option>
+            <option value="Tempo Insuficiente">Tempo Insuficiente</option>
+          </select>
+          <input type="text" id="errQuestion" placeholder="Resumo da questão / o que errei" required />
+          <input type="text" id="errCorrection" placeholder="Como resolver corretamente" required />
+          <button type="submit" class="btn-primary">+ Salvar Erro (+15 pts)</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Erros Mapeados</h3>
+        <div id="mistakeList" class="list-stack"></div>
+      </div>
+    </section>
+
+    <!-- 6. SIMULADOS -->
+    <section class="view" id="view-simulations">
+      <div class="card mb-18">
+        <h3>Registrar Simulado UFU</h3>
+        <form id="mockForm" class="form-grid">
+          <input type="text" id="mockName" placeholder="Ex: UFU 2024/1 - 1ª Fase" required />
+          <input type="number" id="mockScore" placeholder="Acertos" min="0" max="90" required />
+          <input type="number" id="mockTotal" placeholder="Total de questões" value="65" min="1" max="90" required />
+          <button type="submit" class="btn-primary">+ Lançar (+80 pts)</button>
+        </form>
+      </div>
+
+      <div class="card mb-18">
+        <div class="card-header">
+          <h3>Evolução nos Simulados</h3>
+          <span class="gold-text" id="bestMockTag">Recorde: --</span>
+        </div>
+        <div class="chart-wrap"><canvas id="mockChart"></canvas></div>
+      </div>
+
+      <div class="card">
+        <h3>Histórico de Provas</h3>
+        <div id="mockHistory" class="chip-wrap"></div>
+      </div>
+    </section>
+
+    <!-- 7. REDAÇÕES -->
+    <section class="view" id="view-essays">
+      <div class="card mb-18">
+        <h3>Registrar Redação</h3>
+        <form id="essayForm" class="form-grid">
+          <input type="text" id="essayTheme" placeholder="Tema ou Gênero (Ex: Carta Aberta)" required />
+          <input type="date" id="essayDate" required />
+          <input type="number" id="essayGrade" placeholder="Nota" step="0.5" min="0" max="1000" required />
+          <input type="text" id="essayNotes" placeholder="Principal ponto a melhorar" />
+          <button type="submit" class="btn-primary">+ Salvar Redação (+30 pts)</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Redações Produzidas</h3>
+        <div id="essayList" class="list-stack"></div>
+      </div>
+    </section>
+
+    <!-- 8. RECOMPENSAS -->
+    <section class="view" id="view-rewards">
+      <div class="card mb-18">
+        <h3>Adicionar Nova Recompensa</h3>
+        <form id="rewardForm" class="form-grid">
+          <input type="text" id="rewTitle" placeholder="Nome da recompensa" required />
+          <input type="text" id="rewDesc" placeholder="Descrição curta" required />
+          <input type="number" id="rewCost" placeholder="Custo em pontos" min="10" step="10" required />
+          <button type="submit" class="btn-primary">+ Criar Recompensa</button>
+        </form>
+      </div>
+
+      <div class="rewards-grid" id="rewardsGrid"></div>
+    </section>
+
+    <!-- 9. RANKING & PERFIL -->
+    <!-- 9. RANKING & PERFIL -->
+    <section class="view" id="view-ranking">
+      <div class="dashboard-mid">
+        <!-- COLUNA ESQUERDA: PERFIL -->
+        <div class="card">
+          <h3>Meu Perfil & Privacidade</h3>
+          <p class="muted mb-18" id="profileLoginHint">Entre com Google no topo para salvar na nuvem e participar do ranking.</p>
+          <form id="profileForm" class="list-stack">
+            <div class="profile-preview">
+              <img id="profileAvatarPreview" src="" alt="Foto de Perfil" />
+              <div>
+                <strong id="profileNamePreview">Estudante UFU</strong>
+                <div class="muted" id="profileEmailPreview">Modo Offline Local</div>
+              </div>
+            </div>
+
+            <label class="field-label">Nome de Usuário</label>
+            <input type="text" id="profNameInput" placeholder="Seu nome ou apelido" required />
+
+            <label class="field-label">Foto de Perfil</label>
+            <input type="file" id="profFileInput" accept="image/*" style="display: none;" />
+            <div class="chip-wrap">
+              <button type="button" class="btn-outline btn-xs" onclick="document.getElementById('profFileInput').click()">Escolher foto da galeria</button>
+              <button type="button" class="mini-btn" onclick="selectConstellation('serpens')">Serpens</button>
+              <button type="button" class="mini-btn" onclick="selectConstellation('ursa')">Ursa Menor</button>
+              <button type="button" class="mini-btn" onclick="selectConstellation('orion')">Órion</button>
+              <button type="button" class="mini-btn" onclick="selectConstellation('cassiopeia')">Cassiopeia</button>
+            </div>
+
+            <label class="toggle-row">
+              <input type="checkbox" id="profShowRanking" checked />
+              <span>Aparecer nos Rankings Públicos</span>
+            </label>
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;">
+              <button type="submit" class="btn-primary">Salvar Perfil</button>
+              <button type="button" class="btn-outline hidden" id="btnLogout" onclick="logoutUser()">Sair da Conta</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- COLUNA DIREITA: OS DOIS RANKINGS -->
+        <div class="list-stack">
+          <div class="card">
+            <div class="card-header">
+              <h3>Ranking Geral (XP Acumulado)</h3>
+              <button class="btn-outline btn-xs" onclick="loadLeaderboard()">Atualizar</button>
+            </div>
+            <div id="leaderboardList" class="list-stack">
+              <p class="muted">Faça login com Google para carregar o ranking em tempo real.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>Ranking de Acertos (Recorde em Simulados)</h3>
+              <button class="btn-outline btn-xs" onclick="loadMockLeaderboard()">Atualizar</button>
+            </div>
+            <div id="mockLeaderboardList" class="list-stack">
+              <p class="muted">Lance um simulado e faça login para entrar no ranking de provas.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAINEL EXCLUSIVO ADMIN (VISÍVEL APENAS PARA O SEU E-MAIL) -->
+      <div class="card mt-18 hidden" id="adminPanelCard" style="border-color: var(--gold);">
+        <div class="card-header">
+          <h3>Controle de Acesso & Monitoramento Geral (Admin)</h3>
+          <button class="btn-outline btn-xs" onclick="loadAdminUsers()">Atualizar Lista Completa</button>
+        </div>
+        <p class="muted mb-18">Visão completa de todos os estudantes cadastrados, incluindo perfis ocultos nos rankings públicos.</p>
+        <div id="adminUsersList" class="list-stack"></div>
+      </div>
+    </section>
+  </main>
+
+<div class="toast" id="toast"></div>
   <script src="script.js"></script>
+  <script type="module" src="firebase-sync.js"></script>
 </body>
 </html>
