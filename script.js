@@ -1,8 +1,8 @@
 // --- RECOMPENSAS PADRÃO ---
 const DEFAULT_REWARDS = [
-  { id: 'r1', title: 'Assistir um jogo de futebol', desc: 'torcendo sem culpa (e passar raiva com seu time)', cost: 150 },
-  { id: 'r2', title: 'Série/filme', desc: 'Um episódio sem culpa', cost: 300 },
-  { id: 'r3', title: 'Sessão de jogos', desc: 'Tempo livre para relaxar', cost: 400 },
+  { id: 'r1', title: 'Pausa Café & Música', desc: '15 minutos livres após bater a meta do dia', cost: 100 },
+  { id: 'r2', title: 'Episódio / Filme Livre', desc: 'Assistir sem culpa depois do simulado', cost: 250 },
+  { id: 'r3', title: 'Doce ou Lanche Especial', desc: 'Comemorar semana de estudos fechada', cost: 400 },
   { id: 'r4', title: 'Domingo Off Total', desc: 'Descanso completo após atingir 1.000 pts', cost: 1000 }
 ];
 
@@ -139,6 +139,14 @@ const UFU_SYLLABUS_DEFAULT = [
   { area: 'Ciências Humanas', discipline: 'Sociologia', topic: '11. Sistemas políticos e formas de governo: sistema partidário e eleitoral no Brasil', questions: 0, correct: 0, status: 'Em estudo' }
 ];
 
+// --- CONSTELAÇÕES ---
+const CONSTELLATION_AVATARS = {
+  serpens: "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#09130f"/><circle cx="50" cy="50" r="44" fill="none" stroke="#1d3029" stroke-width="1"/><polyline points="22,68 35,52 48,58 56,38 72,34 78,24" fill="none" stroke="#10b981" stroke-width="1.3" stroke-opacity="0.7"/><circle cx="22" cy="68" r="2.2" fill="#d4af37"/><circle cx="35" cy="52" r="2" fill="#edf3f0"/><circle cx="48" cy="58" r="2.5" fill="#d4af37"/><circle cx="56" cy="38" r="2" fill="#edf3f0"/><circle cx="72" cy="34" r="2.8" fill="#d4af37"/><circle cx="78" cy="24" r="1.8" fill="#10b981"/><circle cx="30" cy="28" r="1" fill="#7f948c"/><circle cx="68" cy="70" r="1.1" fill="#7f948c"/></svg>`),
+  ursa: "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#09130f"/><circle cx="50" cy="50" r="44" fill="none" stroke="#1d3029" stroke-width="1"/><polygon points="52,48 74,45 77,62 55,65" fill="none" stroke="#10b981" stroke-width="1.2" stroke-opacity="0.7"/><polyline points="22,30 34,36 44,42 52,48" fill="none" stroke="#10b981" stroke-width="1.2" stroke-opacity="0.7"/><circle cx="22" cy="30" r="3" fill="#d4af37"/><circle cx="34" cy="36" r="1.8" fill="#edf3f0"/><circle cx="44" cy="42" r="1.8" fill="#edf3f0"/><circle cx="52" cy="48" r="2" fill="#edf3f0"/><circle cx="74" cy="45" r="2.2" fill="#d4af37"/><circle cx="77" cy="62" r="2" fill="#edf3f0"/><circle cx="55" cy="65" r="1.8" fill="#edf3f0"/></svg>`),
+  orion: "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#09130f"/><circle cx="50" cy="50" r="44" fill="none" stroke="#1d3029" stroke-width="1"/><polyline points="34,24 44,50 32,76 66,74 56,48 68,26 34,24" fill="none" stroke="#10b981" stroke-width="1.2" stroke-opacity="0.65"/><line x1="44" y1="50" x2="56" y2="48" stroke="#d4af37" stroke-width="1.3"/><circle cx="34" cy="24" r="2.8" fill="#d4af37"/><circle cx="68" cy="26" r="2.4" fill="#edf3f0"/><circle cx="44" cy="50" r="2" fill="#d4af37"/><circle cx="50" cy="49" r="2" fill="#edf3f0"/><circle cx="56" cy="48" r="2" fill="#d4af37"/><circle cx="32" cy="76" r="2.4" fill="#edf3f0"/><circle cx="66" cy="74" r="2.8" fill="#10b981"/></svg>`),
+  cassiopeia: "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#09130f"/><circle cx="50" cy="50" r="44" fill="none" stroke="#1d3029" stroke-width="1"/><polyline points="20,38 35,62 50,46 66,64 80,36" fill="none" stroke="#10b981" stroke-width="1.4" stroke-opacity="0.75"/><circle cx="20" cy="38" r="2.4" fill="#d4af37"/><circle cx="35" cy="62" r="2.6" fill="#edf3f0"/><circle cx="50" cy="46" r="2.8" fill="#d4af37"/><circle cx="66" cy="64" r="2.2" fill="#10b981"/><circle cx="80" cy="36" r="2.5" fill="#d4af37"/><circle cx="48" cy="24" r="1.1" fill="#7f948c"/><circle cx="52" cy="76" r="1.1" fill="#7f948c"/></svg>`)
+};
+
 // --- ESTADO GLOBAL ---
 function getDefaultState() {
   return {
@@ -146,7 +154,7 @@ function getDefaultState() {
     totalXP: 0,
     profile: {
       displayName: 'Estudante UFU',
-      photoURL: 'https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Slytherin',
+      photoURL: CONSTELLATION_AVATARS.serpens,
       showInRanking: true
     },
     rewards: JSON.parse(JSON.stringify(DEFAULT_REWARDS)),
@@ -237,6 +245,7 @@ function toggleWidget(id, visible) {
 let toastTimer;
 function showToast(msg, isGold = false) {
   const el = document.getElementById('toast');
+  if (!el) return;
   el.textContent = msg;
   el.style.borderColor = isGold ? '#d4af37' : '#10b981';
   el.classList.add('show');
@@ -254,7 +263,7 @@ function updateCountdown() {
 
   if (days > 0) {
     el.textContent = `${days} dias`;
-    if (days <= 7) badge.classList.remove('hidden');
+    if (days <= 7 && badge) badge.classList.remove('hidden');
   } else if (days === 0) {
     el.textContent = 'É HOJE!';
   } else {
@@ -368,13 +377,6 @@ function redeemReward(cost, name) {
 }
 
 // --- PERFIL & CONSTELAÇÕES ---
-const CONSTELLATION_AVATARS = {
-  serpens: "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#09130f"/><circle cx="50" cy="50" r="44" fill="none" stroke="#1d3029" stroke-width="1"/><polyline points="22,68 35,52 48,58 56,38 72,34 78,24" fill="none" stroke="#10b981" stroke-width="1.3" stroke-opacity="0.7"/><circle cx="22" cy="68" r="2.2" fill="#d4af37"/><circle cx="35" cy="52" r="2" fill="#edf3f0"/><circle cx="48" cy="58" r="2.5" fill="#d4af37"/><circle cx="56" cy="38" r="2" fill="#edf3f0"/><circle cx="72" cy="34" r="2.8" fill="#d4af37"/><circle cx="78" cy="24" r="1.8" fill="#10b981"/><circle cx="30" cy="28" r="1" fill="#7f948c"/><circle cx="68" cy="70" r="1.1" fill="#7f948c"/></svg>`),
-  ursa: "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#09130f"/><circle cx="50" cy="50" r="44" fill="none" stroke="#1d3029" stroke-width="1"/><polygon points="52,48 74,45 77,62 55,65" fill="none" stroke="#10b981" stroke-width="1.2" stroke-opacity="0.7"/><polyline points="22,30 34,36 44,42 52,48" fill="none" stroke="#10b981" stroke-width="1.2" stroke-opacity="0.7"/><circle cx="22" cy="30" r="3" fill="#d4af37"/><circle cx="34" cy="36" r="1.8" fill="#edf3f0"/><circle cx="44" cy="42" r="1.8" fill="#edf3f0"/><circle cx="52" cy="48" r="2" fill="#edf3f0"/><circle cx="74" cy="45" r="2.2" fill="#d4af37"/><circle cx="77" cy="62" r="2" fill="#edf3f0"/><circle cx="55" cy="65" r="1.8" fill="#edf3f0"/></svg>`),
-  orion: "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#09130f"/><circle cx="50" cy="50" r="44" fill="none" stroke="#1d3029" stroke-width="1"/><polyline points="34,24 44,50 32,76 66,74 56,48 68,26 34,24" fill="none" stroke="#10b981" stroke-width="1.2" stroke-opacity="0.65"/><line x1="44" y1="50" x2="56" y2="48" stroke="#d4af37" stroke-width="1.3"/><circle cx="34" cy="24" r="2.8" fill="#d4af37"/><circle cx="68" cy="26" r="2.4" fill="#edf3f0"/><circle cx="44" cy="50" r="2" fill="#d4af37"/><circle cx="50" cy="49" r="2" fill="#edf3f0"/><circle cx="56" cy="48" r="2" fill="#d4af37"/><circle cx="32" cy="76" r="2.4" fill="#edf3f0"/><circle cx="66" cy="74" r="2.8" fill="#10b981"/></svg>`),
-  cassiopeia: "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#09130f"/><circle cx="50" cy="50" r="44" fill="none" stroke="#1d3029" stroke-width="1"/><polyline points="20,38 35,62 50,46 66,64 80,36" fill="none" stroke="#10b981" stroke-width="1.4" stroke-opacity="0.75"/><circle cx="20" cy="38" r="2.4" fill="#d4af37"/><circle cx="35" cy="62" r="2.6" fill="#edf3f0"/><circle cx="50" cy="46" r="2.8" fill="#d4af37"/><circle cx="66" cy="64" r="2.2" fill="#10b981"/><circle cx="80" cy="36" r="2.5" fill="#d4af37"/><circle cx="48" cy="24" r="1.1" fill="#7f948c"/><circle cx="52" cy="76" r="1.1" fill="#7f948c"/></svg>`)
-};
-
 let pendingAvatarData = null;
 
 function renderProfile() {
@@ -453,6 +455,7 @@ document.getElementById('profileForm').addEventListener('submit', (e) => {
   saveState();
   renderProfile();
   if (typeof window.loadLeaderboard === 'function') window.loadLeaderboard();
+  if (typeof window.loadMockLeaderboard === 'function') window.loadMockLeaderboard();
   showToast('Perfil atualizado.');
 });
 
@@ -572,7 +575,6 @@ function resetWeekChecks() {
 }
 
 // --- MAPA DO EDITAL ---
-// --- MAPA DO EDITAL ---
 let currentDisciplineFilter = 'Todas';
 let syllabusUndoStack = null;
 
@@ -603,23 +605,45 @@ function undoSyllabusAction() {
 
 function restoreDefaultSyllabus() {
   saveSyllabusSnapshot(0);
-  const existingTopics = new Set(state.syllabus.map(s => `${s.discipline}::${s.topic}`));
+
+  const currentMap = new Map();
+  state.syllabus.forEach(item => {
+    currentMap.set(`${item.discipline}::${item.topic}`, item);
+  });
+
+  const defaultKeys = new Set();
+  const orderedSyllabus = [];
   let added = 0;
 
+  // Reconstrói na ordem oficial da UFU, mantendo seu progresso nos existentes
   UFU_SYLLABUS_DEFAULT.forEach(defItem => {
     const key = `${defItem.discipline}::${defItem.topic}`;
-    if (!existingTopics.has(key)) {
-      state.syllabus.push(JSON.parse(JSON.stringify(defItem)));
+    defaultKeys.add(key);
+
+    if (currentMap.has(key)) {
+      orderedSyllabus.push(currentMap.get(key));
+    } else {
+      orderedSyllabus.push(JSON.parse(JSON.stringify(defItem)));
       added++;
     }
   });
 
+  // Preserva tópicos extras que você tenha adicionado manualmente
+  state.syllabus.forEach(item => {
+    const key = `${item.discipline}::${item.topic}`;
+    if (!defaultKeys.has(key)) {
+      orderedSyllabus.push(item);
+    }
+  });
+
+  state.syllabus = orderedSyllabus;
   saveState();
   renderSyllabus();
+
   if (added > 0) {
-    showToast(`${added} tópico(s) restaurado(s) sem perder seu progresso!`);
+    showToast(`${added} tópico(s) restaurado(s) na ordem original!`);
   } else {
-    showToast('Todos os 124 tópicos oficiais já estão na lista.');
+    showToast('Todos os 124 tópicos oficiais já estão na ordem certa.');
   }
 }
 
