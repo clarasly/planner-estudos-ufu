@@ -230,7 +230,14 @@
       </div>
 
       <div class="card">
-        <h3>Conteúdos Programáticos UFU 2027</h3>
+        <div class="card-header" style="flex-wrap: wrap; gap: 10px;">
+          <h3>Conteúdos Programáticos UFU 2027</h3>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn-outline btn-xs hidden" id="btnUndoSyllabus" onclick="undoSyllabusAction()">Desfazer última ação</button>
+            <button type="button" class="btn-outline btn-xs" onclick="restoreDefaultSyllabus()">Restaurar Tópicos Faltantes</button>
+            <button type="button" class="btn-outline btn-xs" onclick="resetFullSyllabus()">Reiniciar Edital Completo</button>
+          </div>
+        </div>
         <div id="syllabusList" class="list-stack"></div>
       </div>
     </section>

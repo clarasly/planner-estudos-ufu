@@ -572,7 +572,67 @@ function resetWeekChecks() {
 }
 
 // --- MAPA DO EDITAL ---
+// --- MAPA DO EDITAL ---
 let currentDisciplineFilter = 'Todas';
+let syllabusUndoStack = null;
+
+function saveSyllabusSnapshot(pointsDelta = 0) {
+  syllabusUndoStack = {
+    syllabus: JSON.parse(JSON.stringify(state.syllabus)),
+    pointsDelta: pointsDelta
+  };
+  const btn = document.getElementById('btnUndoSyllabus');
+  if (btn) btn.classList.remove('hidden');
+}
+
+function undoSyllabusAction() {
+  if (!syllabusUndoStack) return;
+  state.syllabus = syllabusUndoStack.syllabus;
+  if (syllabusUndoStack.pointsDelta > 0) {
+    state.points = Math.max(0, state.points - syllabusUndoStack.pointsDelta);
+    state.totalXP = Math.max(0, state.totalXP - syllabusUndoStack.pointsDelta);
+  }
+  syllabusUndoStack = null;
+  const btn = document.getElementById('btnUndoSyllabus');
+  if (btn) btn.classList.add('hidden');
+  saveState();
+  updateHUD();
+  renderSyllabus();
+  showToast('Última alteração no edital desfeita.');
+}
+
+function restoreDefaultSyllabus() {
+  saveSyllabusSnapshot(0);
+  const existingTopics = new Set(state.syllabus.map(s => `${s.discipline}::${s.topic}`));
+  let added = 0;
+
+  UFU_SYLLABUS_DEFAULT.forEach(defItem => {
+    const key = `${defItem.discipline}::${defItem.topic}`;
+    if (!existingTopics.has(key)) {
+      state.syllabus.push(JSON.parse(JSON.stringify(defItem)));
+      added++;
+    }
+  });
+
+  saveState();
+  renderSyllabus();
+  if (added > 0) {
+    showToast(`${added} tópico(s) restaurado(s) sem perder seu progresso!`);
+  } else {
+    showToast('Todos os 124 tópicos oficiais já estão na lista.');
+  }
+}
+
+function resetFullSyllabus() {
+  const ok = confirm('Isso vai restaurar os 124 tópicos originais da UFU zerados ("Em estudo"). Deseja continuar?');
+  if (!ok) return;
+
+  saveSyllabusSnapshot(0);
+  state.syllabus = JSON.parse(JSON.stringify(UFU_SYLLABUS_DEFAULT));
+  saveState();
+  renderSyllabus();
+  showToast('Edital UFU reiniciado para o padrão inicial.');
+}
 
 function setDisciplineFilter(disc) {
   currentDisciplineFilter = disc;
@@ -638,6 +698,7 @@ function logSyllabusQuestions(idx) {
   const c = Number(prompt(`Quantas acertou dessas ${q}?`, '0'));
   if (isNaN(c) || c < 0) return;
 
+  saveSyllabusSnapshot(30);
   item.questions += q;
   item.correct += Math.min(q, c);
   addPoints(30, `Lista: ${item.topic}`);
@@ -654,8 +715,10 @@ document.getElementById('syllabusForm').addEventListener('submit', e => {
   const correct = Number(document.getElementById('sylCorrect').value);
   const status = document.getElementById('sylStatus').value;
 
+  const pts = status === 'Dominado' ? 40 : 0;
+  saveSyllabusSnapshot(pts);
   state.syllabus.unshift({ area, discipline, topic, questions, correct, status });
-  if (status === 'Dominado') addPoints(40, `Assunto dominado: ${topic}`);
+  if (pts > 0) addPoints(40, `Assunto dominado: ${topic}`);
 
   document.getElementById('sylTopic').value = '';
   saveState();
@@ -666,16 +729,24 @@ function cycleSyllabusStatus(idx) {
   const order = ['Em estudo', 'Revisar', 'Dominado'];
   const cur = state.syllabus[idx];
   const next = order[(order.indexOf(cur.status) + 1) % order.length];
+  const pts = next === 'Dominado' ? 40 : 0;
+
+  saveSyllabusSnapshot(pts);
   cur.status = next;
-  if (next === 'Dominado') addPoints(40, `Assunto dominado: ${cur.topic}`);
+  if (pts > 0) addPoints(40, `Assunto dominado: ${cur.topic}`);
   saveState();
   renderSyllabus();
 }
 
 function deleteSyllabus(idx) {
+  const item = state.syllabus[idx];
+  if (!confirm(`Remover "${item.topic}" do edital?`)) return;
+
+  saveSyllabusSnapshot(0);
   state.syllabus.splice(idx, 1);
   saveState();
   renderSyllabus();
+  showToast('Tópico removido. Clique em "Desfazer última ação" se foi sem querer.');
 }
 
 // --- REVISÕES 15 / 30 / 60 DIAS ---
