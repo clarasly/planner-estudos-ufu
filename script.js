@@ -155,7 +155,8 @@ function getDefaultState() {
     profile: {
       displayName: 'Estudante UFU',
       photoURL: CONSTELLATION_AVATARS.serpens,
-      showInRanking: true
+      showInXPRanking: true,
+      showInMockRanking: true
     },
     rewards: JSON.parse(JSON.stringify(DEFAULT_REWARDS)),
     planner: {
@@ -191,7 +192,8 @@ const pageTitles = {
   simulations: 'Simulados & Estatísticas',
   essays: 'Controle de Redações',
   rewards: 'Recompensas & Conquistas',
-  ranking: 'Ranking Geral & Perfil'
+  ranking: 'Ranking Geral & Perfil',
+  about: 'Sobre & Recursos'
 };
 
 const pillTitles = {
@@ -203,7 +205,8 @@ const pillTitles = {
   simulations: 'Desempenho em Provas',
   essays: 'Produção Textual',
   rewards: 'Sistema de Recompensas',
-  ranking: 'Comunidade & Perfil'
+  ranking: 'Comunidade & Perfil',
+  about: 'Criadora & Benefícios'
 };
 
 function navigate(viewId, btnEl) {
@@ -388,7 +391,13 @@ function renderProfile() {
   document.getElementById('profileNamePreview').textContent = name;
   document.getElementById('profileAvatarPreview').src = avatar;
   document.getElementById('profNameInput').value = name;
-  document.getElementById('profShowRanking').checked = state.profile.showInRanking !== false;
+
+  const fallback = state.profile.showInRanking !== false;
+  document.getElementById('profShowXPRanking').checked =
+    state.profile.showInXPRanking !== undefined ? state.profile.showInXPRanking : fallback;
+  document.getElementById('profShowMockRanking').checked =
+    state.profile.showInMockRanking !== undefined ? state.profile.showInMockRanking : fallback;
+
   pendingAvatarData = null;
 }
 
@@ -450,13 +459,15 @@ document.getElementById('profileForm').addEventListener('submit', (e) => {
   if (pendingAvatarData) {
     state.profile.photoURL = pendingAvatarData;
   }
-  state.profile.showInRanking = document.getElementById('profShowRanking').checked;
+  state.profile.showInXPRanking = document.getElementById('profShowXPRanking').checked;
+  state.profile.showInMockRanking = document.getElementById('profShowMockRanking').checked;
 
   saveState();
   renderProfile();
   if (typeof window.loadLeaderboard === 'function') window.loadLeaderboard();
   if (typeof window.loadMockLeaderboard === 'function') window.loadMockLeaderboard();
-  showToast('Perfil atualizado.');
+  if (typeof window.loadAdminUsers === 'function') window.loadAdminUsers();
+  showToast('Perfil e preferências de ranking atualizados.');
 });
 
 // --- PLANEJAMENTO ADAPTATIVO ---
@@ -1041,6 +1052,18 @@ function renderAll() {
   renderMistakes();
   renderMocks();
   renderEssays();
+}
+
+function copyCouponCode(code) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).then(() => {
+      showToast(`Cupom ${code} copiado para a área de transferência!`, true);
+    }).catch(() => {
+      showToast(`Use o cupom: ${code}`, true);
+    });
+  } else {
+    showToast(`Use o cupom: ${code}`, true);
+  }
 }
 
 document.getElementById('revDate').valueAsDate = new Date();

@@ -12,7 +12,7 @@ const firebaseConfig = {
   measurementId: "G-MWT5FS64HX"
 };
 
-
+// COLOQUE SEU E-MAIL DO GOOGLE AQUI:
 const ADMIN_EMAIL = "mariacta9000@gmail.com";
 
 const app = initializeApp(firebaseConfig);
@@ -60,6 +60,10 @@ window.syncCloudState = async function (currentState) {
   const mockStats = getMockSummary(currentState.mocks);
   const sylPct = getSyllabusPct(currentState.syllabus);
 
+  const fallback = currentState.profile.showInRanking !== false;
+  const showXP = currentState.profile.showInXPRanking !== undefined ? currentState.profile.showInXPRanking : fallback;
+  const showMock = currentState.profile.showInMockRanking !== undefined ? currentState.profile.showInMockRanking : fallback;
+
   try {
     await setDoc(doc(db, 'users', currentUser.uid), {
       state: currentState,
@@ -72,7 +76,8 @@ window.syncCloudState = async function (currentState) {
       lastMockLabel: mockStats.lastLabel,
       totalMocks: mockStats.totalMocks,
       syllabusPct: sylPct,
-      showInRanking: currentState.profile.showInRanking,
+      showInXPRanking: showXP,
+      showInMockRanking: showMock,
       updatedAt: new Date().toISOString()
     }, { merge: true });
   } catch (err) {
@@ -155,14 +160,14 @@ window.loadLeaderboard = async function () {
   try {
     const q = query(
       collection(db, 'users'),
-      where('showInRanking', '==', true),
+      where('showInXPRanking', '==', true),
       orderBy('totalXP', 'desc'),
       limit(30)
     );
     const snapshot = await getDocs(q);
 
     if (snapshot.empty) {
-      container.innerHTML = '<p class="muted">Nenhum participante visível no ranking ainda.</p>';
+      container.innerHTML = '<p class="muted">Nenhum participante visível neste ranking ainda.</p>';
       return;
     }
 
@@ -191,7 +196,7 @@ window.loadLeaderboard = async function () {
     });
   } catch (err) {
     console.error(err);
-    container.innerHTML = '<p class="muted">Abra o Console (F12) e clique no link do Firebase para criar o índice de XP.</p>';
+    container.innerHTML = '<p class="muted">Crie o índice estruturado de XP no Firebase (showInXPRanking + totalXP).</p>';
   }
 };
 
@@ -210,7 +215,7 @@ window.loadMockLeaderboard = async function () {
   try {
     const q = query(
       collection(db, 'users'),
-      where('showInRanking', '==', true),
+      where('showInMockRanking', '==', true),
       orderBy('bestMockPct', 'desc'),
       limit(30)
     );
@@ -241,14 +246,14 @@ window.loadMockLeaderboard = async function () {
       pos++;
     });
 
-    container.innerHTML = rowsHtml || '<p class="muted">Nenhum simulado registrado pelos participantes ainda.</p>';
+    container.innerHTML = rowsHtml || '<p class="muted">Nenhum simulado registrado pelos participantes deste ranking ainda.</p>';
   } catch (err) {
     console.error(err);
-    container.innerHTML = '<p class="muted">Abra o Console (F12) e clique no link do Firebase para criar o índice de simulados.</p>';
+    container.innerHTML = '<p class="muted">Crie o índice estruturado de simulados no Firebase (showInMockRanking + bestMockPct).</p>';
   }
 };
 
-// --- PAINEL ADMIN SECRETO (TODOS OS USUÁRIOS, INCLUINDO OCULTOS) ---
+// --- PAINEL ADMIN SECRETO ---
 window.loadAdminUsers = async function () {
   const container = document.getElementById('adminUsersList');
   if (!container || !isAdmin()) return;
@@ -268,10 +273,9 @@ window.loadAdminUsers = async function () {
 
     container.innerHTML = '';
     users.forEach((u) => {
-      const isPublic = u.showInRanking !== false;
-      const statusTag = isPublic
-        ? '<span style="color:#10b981; font-size:0.74rem; font-weight:600;">Público</span>'
-        : '<span style="color:#d4af37; font-size:0.74rem; font-weight:600;">Oculto no Ranking</span>';
+      const xpVis = u.showInXPRanking !== false ? 'XP: Público' : 'XP: Oculto';
+      const mockVis = u.showInMockRanking !== false ? 'Simulado: Público' : 'Simulado: Oculto';
+      const statusTag = `<span style="color:#d4af37; font-size:0.74rem; font-weight:600;">${xpVis} • ${mockVis}</span>`;
 
       const row = document.createElement('div');
       row.className = 'list-row';
@@ -296,6 +300,6 @@ window.loadAdminUsers = async function () {
     });
   } catch (err) {
     console.error(err);
-    container.innerHTML = '<p class="muted">Erro de permissão no Firestore. Atualize as Regras do banco para liberar seu e-mail de Admin.</p>';
+    container.innerHTML = '<p class="muted">Erro de permissão no Firestore. Atualize as Regras do banco.</p>';
   }
 };

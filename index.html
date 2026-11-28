@@ -42,6 +42,7 @@
       <button class="nav-item" onclick="navigate('essays', this)">✍️ Redações</button>
       <button class="nav-item" onclick="navigate('rewards', this)">👑 Recompensas</button>
       <button class="nav-item" onclick="navigate('ranking', this)">🏆 Ranking & Perfil</button>
+      <button class="nav-item" onclick="navigate('about', this)">Sobre & Recursos</button>
     </nav>
 
     <div class="sidebar-footer">
@@ -345,7 +346,6 @@
     </section>
 
     <!-- 9. RANKING & PERFIL -->
-    <!-- 9. RANKING & PERFIL -->
     <section class="view" id="view-ranking">
       <div class="dashboard-mid">
         <!-- COLUNA ESQUERDA: PERFIL -->
@@ -375,8 +375,13 @@
             </div>
 
             <label class="toggle-row">
-              <input type="checkbox" id="profShowRanking" checked />
-              <span>Aparecer nos Rankings Públicos</span>
+              <input type="checkbox" id="profShowXPRanking" checked />
+              <span>Aparecer no Ranking Geral (XP)</span>
+            </label>
+
+            <label class="toggle-row">
+              <input type="checkbox" id="profShowMockRanking" checked />
+              <span>Aparecer no Ranking de Simulados (Acertos)</span>
             </label>
 
             <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;">
@@ -420,6 +425,78 @@
         <div id="adminUsersList" class="list-stack"></div>
       </div>
     </section>
+    <!-- ABA: SOBRE MIM & RECURSOS -->
+<section class="view" id="view-about">
+  <div class="grid-2">
+    <!-- CARD 1: SOBRE MIM & CONTATO -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Sobre mim </h3>
+        <span class="gold-tag">Rumo à Med UFU</span>
+      </div>
+      <p style="line-height: 1.65; margin-bottom: 14px;">
+        Sejam bem vindos! Me chamo Clara e sou vestibulanda de Medicina focada na UFU e criadora deste site. Uma das minhas maiores dificuldades sempre foi organização com base no edital, então pensei por que não criar um site em que contenha o edital com planejamento semanal e controle de revisões, durante a criação diversas ideias foram surgindo e um site que seria apenas pessoal virou um site colaborativo, ainda com muitos pontos a melhorar por isso seria fudamental sugestões e feedbacks de vocês. Até então apenas com edital da ufu o qual era meu foco inicial do site, e tentando colocar o da unicamp, em breve novas atualizações e ferramentas. Deixo desde já meus agradecimentos por cada um que está usando esse site e desejo bons estudos para todos!
+      </p>
+      <p class="muted" style="font-size: 0.85rem; margin-bottom: 18px;">
+        Acompanhe minhas redes sociais ou envie sugestões e relatos de erro por e-mail:
+      </p>
+
+      <div class="list-stack">
+        <a href="https://instagram.com/claratmed" target="_blank" rel="noopener noreferrer" class="list-row" style="text-decoration: none; color: inherit;">
+          <div>
+            <small class="gold-text">Instagram</small>
+            <div><strong>@claratmed</strong></div>
+          </div>
+          <span class="mini-btn">Abrir perfil →</span>
+        </a>
+
+        <a href="https://x.com/studyclarat" target="_blank" rel="noopener noreferrer" class="list-row" style="text-decoration: none; color: inherit;">
+          <div>
+            <small class="gold-text">Twitter / X</small>
+            <div><strong>@studyclarat</strong></div>
+          </div>
+          <span class="mini-btn">Abrir perfil →</span>
+        </a>
+
+        <a href="mailto:mariacta9000@gmail.com?subject=Feedback%20Planner%20UFU" class="list-row" style="text-decoration: none; color: inherit;">
+          <div>
+            <small class="gold-text">Sugestões, Feedbacks, Dúvidas ou Reclamações</small>
+            <div><strong>mariacta9000@gmail.com</strong></div>
+          </div>
+          <span class="mini-btn">Enviar e-mail →</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- CARD 2: ESTUDA.COM + CUPOM CLARAT -->
+    <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div class="card-header">
+          <h3>Banco de Questões & Simulados</h3>
+          <span class="gold-tag">Desconto Exclusivo</span>
+        </div>
+        <p style="line-height: 1.65; margin-bottom: 14px;">
+          Para praticar por meio de questões e filtrar provas anteriores por banca e disciplina, recomendo a <strong>Estuda.com</strong>.
+        </p>
+        <p class="muted" style="font-size: 0.85rem; margin-bottom: 20px;">
+          Assinando pelo link abaixo ou aplicando meu cupom, você garante desconto na sua assinatura e ainda apoia a manutenção gratuita deste site:
+        </p>
+
+        <div class="list-row" style="margin-bottom: 18px; border-color: rgba(212, 175, 55, 0.35);">
+          <div>
+            <small class="gold-text">Cupom de desconto</small>
+            <div style="font-size: 1.15rem; letter-spacing: 1px;"><strong>CLARAT</strong></div>
+          </div>
+          <button type="button" class="mini-btn" onclick="copyCouponCode('CLARAT')">Copiar cupom</button>
+        </div>
+      </div>
+
+      <a href="https://app.estuda.com/usuarios_assinaturas/?chave=CLARAT&utm_source=embaixadores&utm_medium=organiccc" target="_blank" rel="noopener noreferrer" class="btn-primary" style="text-align: center; text-decoration: none; display: block; width: 100%;">
+        Assinar Estuda.com com Desconto →
+      </a>
+    </div>
+  </div>
+</section>
   </main>
 
 <div class="toast" id="toast"></div>
